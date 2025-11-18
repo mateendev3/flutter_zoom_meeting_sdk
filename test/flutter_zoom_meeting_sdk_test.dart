@@ -10,6 +10,26 @@ class MockFlutterZoomMeetingSdkPlatform
 
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
+
+  @override
+  Future<Map<String, dynamic>?> initialize({
+    required String jwtToken,
+    String domain = 'zoom.us',
+    bool enableLog = true,
+    bool enableDump = true,
+    int logSize = 5,
+  }) {
+    return Future.value({'status': 'init'});
+  }
+
+  @override
+  Future<Map<String, dynamic>?> joinMeeting({
+    required String meetingNumber,
+    String? password,
+    required String displayName,
+  }) {
+    return Future.value({'status': 'join'});
+  }
 }
 
 void main() {
@@ -25,5 +45,27 @@ void main() {
     FlutterZoomMeetingSdkPlatform.instance = fakePlatform;
 
     expect(await flutterZoomMeetingSdkPlugin.getPlatformVersion(), '42');
+  });
+
+  test('initialize forwards to platform', () async {
+    FlutterZoomMeetingSdk flutterZoomMeetingSdkPlugin = FlutterZoomMeetingSdk();
+    MockFlutterZoomMeetingSdkPlatform fakePlatform = MockFlutterZoomMeetingSdkPlatform();
+    FlutterZoomMeetingSdkPlatform.instance = fakePlatform;
+
+    expect(
+      await flutterZoomMeetingSdkPlugin.initialize(jwtToken: 'token'),
+      equals({'status': 'init'}),
+    );
+  });
+
+  test('joinMeeting forwards to platform', () async {
+    FlutterZoomMeetingSdk flutterZoomMeetingSdkPlugin = FlutterZoomMeetingSdk();
+    MockFlutterZoomMeetingSdkPlatform fakePlatform = MockFlutterZoomMeetingSdkPlatform();
+    FlutterZoomMeetingSdkPlatform.instance = fakePlatform;
+
+    expect(
+      await flutterZoomMeetingSdkPlugin.joinMeeting(meetingNumber: '123', displayName: 'Tester'),
+      equals({'status': 'join'}),
+    );
   });
 }

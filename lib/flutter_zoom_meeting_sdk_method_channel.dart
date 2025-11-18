@@ -14,4 +14,34 @@ class MethodChannelFlutterZoomMeetingSdk extends FlutterZoomMeetingSdkPlatform {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
+  @override
+  Future<Map<String, dynamic>?> initialize({
+    required String jwtToken,
+    String domain = 'zoom.us',
+    bool enableLog = true,
+    bool enableDump = true,
+    int logSize = 5,
+  }) {
+    return methodChannel.invokeMapMethod<String, dynamic>('initialize', {
+      'jwtToken': jwtToken,
+      'domain': domain,
+      'enableLog': enableLog,
+      'enableDump': enableDump,
+      'logSize': logSize,
+    });
+  }
+
+  @override
+  Future<Map<String, dynamic>?> joinMeeting({
+    required String meetingNumber,
+    String? password,
+    required String displayName,
+  }) {
+    return methodChannel.invokeMapMethod<String, dynamic>('joinMeeting', {
+      'meetingNumber': meetingNumber,
+      'password': password,
+      'displayName': displayName,
+    });
+  }
 }

@@ -31,3 +31,10 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 /build/
 /coverage/
+
+# FVM Version Cache
+.fvm/
+
+# Zoom MobileRTC SDK (too large for git, must be set up locally)
+mobilertc.aar
+mobilertc-6.0.0.aar

@@ -12,7 +12,16 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
       channel,
       (MethodCall methodCall) async {
-        return '42';
+        switch (methodCall.method) {
+          case 'getPlatformVersion':
+            return '42';
+          case 'initialize':
+            return {'status': 'success'};
+          case 'joinMeeting':
+            return {'status': 'success', 'code': 0};
+          default:
+            return null;
+        }
       },
     );
   });
@@ -23,5 +32,19 @@ void main() {
 
   test('getPlatformVersion', () async {
     expect(await platform.getPlatformVersion(), '42');
+  });
+
+  test('initialize', () async {
+    expect(
+      await platform.initialize(jwtToken: 'token'),
+      equals({'status': 'success'}),
+    );
+  });
+
+  test('joinMeeting', () async {
+    expect(
+      await platform.joinMeeting(meetingNumber: '123456789', displayName: 'Flutter User'),
+      equals({'status': 'success', 'code': 0}),
+    );
   });
 }
