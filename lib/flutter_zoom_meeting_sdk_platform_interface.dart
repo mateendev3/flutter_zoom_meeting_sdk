@@ -23,6 +23,19 @@ abstract class FlutterZoomMeetingSdkPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// Initializes the Zoom MobileRTC SDK on the platform.
+  ///
+  /// [jwtToken]: A valid JWT token generated from the Zoom developer account.
+  /// [domain]: The Zoom domain to use, defaults to 'zoom.us'.
+  /// [enableLog]: If true, enables SDK logging, defaults to true.
+  /// [enableDump]: If true, enables crash dump generation, defaults to true.
+  /// [logSize]: The maximum size of log files in MB, defaults to 5.
+  ///
+  /// Returns a [Future] that resolves with a [Map] containing:
+  ///   - 'status': 'success' or error code if failed.
+  ///   - Additional error details if initialization fails.
+  ///
+  /// Throws [UnimplementedError] if not overridden by the platform implementation.
   Future<Map<String, dynamic>?> initialize({
     required String jwtToken,
     String domain = 'zoom.us',
@@ -33,6 +46,17 @@ abstract class FlutterZoomMeetingSdkPlatform extends PlatformInterface {
     throw UnimplementedError('initialize() has not been implemented.');
   }
 
+  /// Joins a Zoom meeting with the given parameters.
+  ///
+  /// [meetingNumber]: The Zoom meeting number (required).
+  /// [password]: The meeting password, if applicable (optional).
+  /// [displayName]: The display name to use in the meeting (required).
+  ///
+  /// Returns a [Future] that resolves with a [Map] containing:
+  ///   - 'status': 'success' if joined, otherwise error information.
+  ///   - 'code': Numeric meeting join result code (0 for success).
+  ///
+  /// Throws [UnimplementedError] if not overridden by the platform implementation.
   Future<Map<String, dynamic>?> joinMeeting({
     required String meetingNumber,
     String? password,

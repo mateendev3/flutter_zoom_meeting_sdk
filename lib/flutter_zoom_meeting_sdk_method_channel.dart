@@ -9,6 +9,15 @@ class MethodChannelFlutterZoomMeetingSdk extends FlutterZoomMeetingSdkPlatform {
   @visibleForTesting
   final methodChannel = const MethodChannel('flutter_zoom_meeting_sdk');
 
+  /// Initializes the Zoom SDK with provided parameters.
+  ///
+  /// [jwtToken] is the JWT required for authentication.
+  /// [domain] defines the Zoom domain. Default is 'zoom.us'.
+  /// [enableLog] enables logging if true. Defaults to true.
+  /// [enableDump] enables dumping if true. Defaults to true.
+  /// [logSize] specifies the log size, in MB. Default is 5.
+  ///
+  /// Returns a Map with initialization results, or null on error.
   @override
   Future<Map<String, dynamic>?> initialize({
     required String jwtToken,
@@ -26,6 +35,13 @@ class MethodChannelFlutterZoomMeetingSdk extends FlutterZoomMeetingSdkPlatform {
     });
   }
 
+  /// Joins a Zoom meeting using the given parameters.
+  ///
+  /// [meetingNumber] is the ID of the meeting to join.
+  /// [password] is the optional password for the meeting.
+  /// [displayName] is the name that will be displayed in the meeting.
+  ///
+  /// Returns a Map with join results, or null on error.
   @override
   Future<Map<String, dynamic>?> joinMeeting({
     required String meetingNumber,
