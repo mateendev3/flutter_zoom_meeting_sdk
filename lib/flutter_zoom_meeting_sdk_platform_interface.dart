@@ -23,10 +23,6 @@ abstract class FlutterZoomMeetingSdkPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<String?> getPlatformVersion() {
-    throw UnimplementedError('platformVersion() has not been implemented.');
-  }
-
   Future<Map<String, dynamic>?> initialize({
     required String jwtToken,
     String domain = 'zoom.us',

@@ -279,12 +279,6 @@ Joins a Zoom meeting.
 
 **Returns:** `Future<Map<String, dynamic>?>` with join status and error code
 
-#### `getPlatformVersion()`
-
-Gets the platform version string.
-
-**Returns:** `Future<String?>` with platform information
-
 ## Requirements
 
 - Flutter SDK: `>=3.3.0`

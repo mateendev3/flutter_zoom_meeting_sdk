@@ -10,12 +10,6 @@ class MethodChannelFlutterZoomMeetingSdk extends FlutterZoomMeetingSdkPlatform {
   final methodChannel = const MethodChannel('flutter_zoom_meeting_sdk');
 
   @override
-  Future<String?> getPlatformVersion() async {
-    final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
-    return version;
-  }
-
-  @override
   Future<Map<String, dynamic>?> initialize({
     required String jwtToken,
     String domain = 'zoom.us',

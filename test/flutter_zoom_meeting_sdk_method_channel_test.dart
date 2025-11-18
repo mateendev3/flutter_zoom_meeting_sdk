@@ -13,8 +13,6 @@ void main() {
       channel,
       (MethodCall methodCall) async {
         switch (methodCall.method) {
-          case 'getPlatformVersion':
-            return '42';
           case 'initialize':
             return {'status': 'success'};
           case 'joinMeeting':
@@ -28,10 +26,6 @@ void main() {
 
   tearDown(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
-  });
-
-  test('getPlatformVersion', () async {
-    expect(await platform.getPlatformVersion(), '42');
   });
 
   test('initialize', () async {

@@ -38,22 +38,6 @@ import 'flutter_zoom_meeting_sdk_platform_interface.dart';
 /// }
 /// ```
 class FlutterZoomMeetingSdk {
-  /// Gets the platform version information.
-  ///
-  /// Returns a string containing the platform version (e.g., "Android 13" or "iOS 16.0").
-  ///
-  /// Returns:
-  /// - A [Future] that completes with a platform version string, or `null` if unavailable.
-  ///
-  /// Example:
-  /// ```dart
-  /// final version = await zoomSdk.getPlatformVersion();
-  /// print('Platform: $version'); // e.g., "Android 13"
-  /// ```
-  Future<String?> getPlatformVersion() {
-    return FlutterZoomMeetingSdkPlatform.instance.getPlatformVersion();
-  }
-
   /// Initializes the Zoom MobileRTC SDK with the provided JWT token.
   ///
   /// This method must be called before attempting to join any meetings.

@@ -9,9 +9,6 @@ class MockFlutterZoomMeetingSdkPlatform
     implements FlutterZoomMeetingSdkPlatform {
 
   @override
-  Future<String?> getPlatformVersion() => Future.value('42');
-
-  @override
   Future<Map<String, dynamic>?> initialize({
     required String jwtToken,
     String domain = 'zoom.us',
@@ -37,14 +34,6 @@ void main() {
 
   test('$MethodChannelFlutterZoomMeetingSdk is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelFlutterZoomMeetingSdk>());
-  });
-
-  test('getPlatformVersion', () async {
-    FlutterZoomMeetingSdk flutterZoomMeetingSdkPlugin = FlutterZoomMeetingSdk();
-    MockFlutterZoomMeetingSdkPlatform fakePlatform = MockFlutterZoomMeetingSdkPlatform();
-    FlutterZoomMeetingSdkPlatform.instance = fakePlatform;
-
-    expect(await flutterZoomMeetingSdkPlugin.getPlatformVersion(), '42');
   });
 
   test('initialize forwards to platform', () async {

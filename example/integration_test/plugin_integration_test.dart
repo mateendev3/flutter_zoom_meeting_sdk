@@ -15,11 +15,10 @@ import 'package:flutter_zoom_meeting_sdk/flutter_zoom_meeting_sdk.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('getPlatformVersion test', (WidgetTester tester) async {
+  testWidgets('initialize test', (WidgetTester tester) async {
     final FlutterZoomMeetingSdk plugin = FlutterZoomMeetingSdk();
-    final String? version = await plugin.getPlatformVersion();
-    // The version string depends on the host platform running the test, so
-    // just assert that some non-empty string is returned.
-    expect(version?.isNotEmpty, true);
+    // Note: This test requires a valid JWT token to actually initialize
+    // For now, we just verify the plugin instance can be created
+    expect(plugin, isNotNull);
   });
 }
