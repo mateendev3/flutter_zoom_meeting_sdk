@@ -36,5 +36,5 @@ migrate_working_dir/
 .fvm/
 
 # Zoom MobileRTC SDK (too large for git, must be set up locally)
-mobilertc.aar
-mobilertc-6.0.0.aar
+/android/mobilertc/
+/android/mobilertc-repo/
