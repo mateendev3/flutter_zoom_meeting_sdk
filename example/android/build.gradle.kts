@@ -2,6 +2,13 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        // Local Zoom MobileRTC artifacts (copied into example/android)
+        maven {
+            url = uri(rootProject.file("mobilertc-repo"))
+        }
+        flatDir {
+            dirs(rootProject.file("mobilertc"))
+        }
     }
 }
 

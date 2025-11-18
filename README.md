@@ -23,7 +23,7 @@ dependencies:
 Then run:
 
 ```bash
-flutter pub get
+fvm flutter pub get
 ```
 
 ## Platform Setup
@@ -34,38 +34,47 @@ flutter pub get
 
 Before using this plugin on Android, you need to set up the Zoom MobileRTC SDK locally:
 
-1. **Download the Zoom MobileRTC SDK** (version 6.0.0) from the [Zoom Developer Portal](https://marketplace.zoom.us/docs/sdk/native-sdks/android/getting-started)
+1. **Download the MobileRTC bundle**  
+   Download the prepared `mobilertc` and `mobilertc-repo` folders from our secure SharePoint link:  
+   [https://algosoftcosa-my.sharepoint.com/:f:/g/personal/m_mehmood_algosoftco_com/EpZZI9of7QhOjrKJIzYLEF8B-E3OWnDNYAt1O6H3r0AOHw?e=zniJTc](https://algosoftcosa-my.sharepoint.com/:f:/g/personal/m_mehmood_algosoftco_com/EpZZI9of7QhOjrKJIzYLEF8B-E3OWnDNYAt1O6H3r0AOHw?e=zniJTc)
 
-2. **Set up the local Maven repository**:
+2. **Copy the folders into your _main_ application**  
+   Place both folders directly inside `android/` of your app (not inside this plugin). After copying, you should have:
 
-   - Extract the downloaded SDK
-   - Create the following directory structure in your project's `android/mobilertc-repo/` folder:
-     ```
-     android/mobilertc-repo/
-     └── us/
-         └── zoom/
-             └── mobilertc/
-                 └── 6.0.0/
-                     ├── mobilertc-6.0.0.aar
-                     └── mobilertc-6.0.0.pom
-     ```
-   - Copy the `mobilertc.aar` file from the downloaded SDK and rename it to `mobilertc-6.0.0.aar`
-   - Create a `mobilertc-6.0.0.pom` file with the following content:
-     ```xml
-     <?xml version="1.0" encoding="UTF-8"?>
-     <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-         <modelVersion>4.0.0</modelVersion>
-         <groupId>us.zoom</groupId>
-         <artifactId>mobilertc</artifactId>
-         <version>6.0.0</version>
-         <packaging>aar</packaging>
-         <name>Zoom MobileRTC</name>
-         <description>Embedded Zoom Meeting SDK</description>
-     </project>
-     ```
+   ```
+   <your-app>/android/mobilertc/
+   <your-app>/android/mobilertc-repo/
+   ```
 
-3. **Copy the AAR for the embedded module**: Place the same `mobilertc.aar` file inside `android/mobilertc/mobilertc.aar`. The plugin’s Android module references this file directly when packaging the Flutter plugin.
+   These folders already contain the required `mobilertc.aar`, `mobilertc-6.0.0.aar`, and `mobilertc-6.0.0.pom` files—no manual extraction or renaming necessary.
+
+3. **Expose the repository to Flutter**: In your main app’s Gradle settings (e.g., root `android/build.gradle` or `build.gradle.kts`), add the local Maven path so Gradle can resolve `us.zoom:mobilertc:6.0.0`. Example (KTS):
+
+```kotlin
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri(rootProject.file("mobilertc-repo")) }
+        flatDir { dirs(rootProject.file("mobilertc")) }
+    }
+}
+```
+
+If you prefer Groovy:
+
+```groovy
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = uri(rootProject.file("mobilertc-repo")) }
+        flatDir { dirs rootProject.file("mobilertc") }
+    }
+}
+```
+
+> **Tip:** The example app in this repo already contains these folders under `example/android/` and the above repository declarations in `example/android/build.gradle.kts`.
 
 4. **Minimum SDK Version**: Ensure your `android/app/build.gradle` has `minSdkVersion` set to at least 28.
 
@@ -74,12 +83,47 @@ Before using this plugin on Android, you need to set up the Zoom MobileRTC SDK l
 Add the following permissions to your `android/app/src/main/AndroidManifest.xml`:
 
 ```xml
-<uses-permission android:name="android.permission.INTERNET" />
+<!-- OpenGL ES 2.0 feature for video rendering -->
+<uses-feature android:glEsVersion="0x00020000"/>
+
+<!-- Location permissions -->
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+<!-- Storage permissions -->
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+
+<!-- Network permissions -->
+<uses-permission android:name="android.permission.INTERNET"/>
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+<!-- Phone state permission -->
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+<!-- Bluetooth permissions -->
+<uses-permission android:name="android.permission.BLUETOOTH"/>
+<uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+
+<!-- Audio/Video permissions -->
 <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.CAMERA" />
+
+<!-- System permissions -->
+<uses-permission android:name="android.permission.BROADCAST_STICKY"/>
+<uses-permission android:name="android.permission.WAKE_LOCK"/>
+<uses-permission android:name="android.permission.CALL_PHONE" />
+<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<uses-permission android:name="android.permission.REORDER_TASKS" />
 ```
+
+> **Note**: Some permissions (like `BLUETOOTH_CONNECT`, `BLUETOOTH_SCAN`, `POST_NOTIFICATIONS`) require runtime permission requests on Android 12+ (API 31+). Make sure to handle these in your app's permission handling logic.
 
 ### iOS
 
@@ -257,6 +301,16 @@ Gets the platform version string.
 3. **Meeting Requirements**: The meeting must already exist. This plugin does not create meetings, only joins existing ones.
 
 4. **iOS Support**: Full iOS support is in development. Currently, only platform version detection is available.
+
+## Running the example app
+
+```bash
+cd example
+fvm flutter pub get
+fvm flutter run
+```
+
+Make sure the `example/android/mobilertc*` folders still exist before running.
 
 ## Troubleshooting
 

@@ -23,33 +23,10 @@ buildscript {
     }
 }
 
-// Repository configuration for all projects
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        // Local directory for mobilertc AAR
-        flatDir {
-            dirs "mobilertc"
-        }
-    }
-}
-
 // Apply Android library and Kotlin plugins
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
-apply from: "mobilertc/versions.gradle"
-
-// Configure Maven repository for Zoom MobileRTC SDK
-def mobilertcRepoUri = file("mobilertc-repo").toURI()
-
-rootProject.allprojects { Project prj ->
-    prj.repositories {
-        maven {
-            url mobilertcRepoUri
-        }
-    }
-}
+apply from: "dependencies.gradle"
 
 // Android build configuration
 android {
