@@ -2,6 +2,23 @@
 
 A Flutter plugin that provides a bridge to the Zoom MobileRTC SDK, enabling Flutter applications to join Zoom meetings on Android and iOS platforms.
 
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+- [Platform Setup](#platform-setup)
+  - [Android](#android)
+  - [iOS](#ios)
+- [Usage](#usage)
+- [API Reference](#api-reference)
+- [Requirements](#requirements)
+- [Important Notes](#important-notes)
+- [Troubleshooting](#troubleshooting)
+- [Running the Example App](#running-the-example-app)
+- [Contributing](#contributing)
+- [License](#license)
+- [Related Links](#related-links)
+
 ## Features
 
 - ✅ Initialize Zoom SDK with JWT token
@@ -129,7 +146,18 @@ Add the following permissions to your `android/app/src/main/AndroidManifest.xml`
 
 #### Prerequisites
 
-Before using this plugin on iOS, you need to set up the Zoom MobileRTC SDK locally:
+Before using this plugin on iOS, you need to set up the Zoom MobileRTC SDK locally.
+
+> **Setup Checklist**: After completing all steps, verify:
+>
+> - ✅ All 4 SDK files are in `ios/lib/`
+> - ✅ Framework Search Paths configured in Xcode
+> - ✅ MobileRTCResources.bundle in Copy Bundle Resources
+> - ✅ Three frameworks in Embed Frameworks phase
+> - ✅ Podfile `post_install` hook configured
+> - ✅ `pod install` completed successfully
+> - ✅ AppDelegate lifecycle methods implemented
+> - ✅ Info.plist permissions added
 
 #### Step 1: Download the Zoom iOS SDK
 
@@ -193,6 +221,12 @@ From the extracted SDK package, you need these 4 files (usually found in the `li
    ```
 
 #### Step 4: Configure Xcode Project
+
+> **Quick Checklist**: After completing this step, you should have:
+>
+> - Framework Search Paths configured
+> - MobileRTCResources.bundle in Copy Bundle Resources
+> - Three frameworks in Embed Frameworks phase
 
 1. **Open your iOS project in Xcode**:
 
@@ -378,25 +412,31 @@ import MobileRTC
 
 ## Troubleshooting
 
-### App Crashes When Joining Meeting
+### iOS Issues
+
+#### App Crashes When Joining Meeting
 
 If your app crashes with an `abort` error when trying to join a meeting, check the following:
 
 1. **AppDelegate Lifecycle Methods** (Most Common Issue):
+
    - Ensure your `AppDelegate.swift` implements all four lifecycle methods shown above
    - Verify each method calls the corresponding `MobileRTC.shared()` method
    - Make sure you're calling `super` methods as well
 
 2. **Frameworks Not Embedded**:
+
    - Verify all three frameworks are in the "Embed Frameworks" build phase
    - Check that "Code Sign On Copy" is enabled for all frameworks
    - Ensure frameworks are present in `ios/lib/` directory
 
 3. **Resource Bundle Missing**:
+
    - Verify `MobileRTCResources.bundle` is in "Copy Bundle Resources" build phase
    - Check that the bundle exists in `ios/lib/` directory
 
 4. **Permissions Missing**:
+
    - Ensure all three permission keys are in `Info.plist`:
      - `NSCameraUsageDescription`
      - `NSMicrophoneUsageDescription`
@@ -406,18 +446,58 @@ If your app crashes with an `abort` error when trying to join a meeting, check t
    - Look for `[ZoomSDK]` prefixed log messages
    - These will help identify where the initialization or join process is failing
 
-### SDK Initialization Fails
-
-- Verify your JWT token is valid and not expired
-- Check that the `domain` parameter matches your Zoom account domain
-- Ensure `MobileRTCResources.bundle` is correctly added to the app bundle
-
-### Build Errors: "Unable to find module dependency: 'MobileRTC'"
+#### Build Errors: "Unable to find module dependency: 'MobileRTC'"
 
 - Run `pod install` in the `ios/` directory
 - Verify the `post_install` hook in `Podfile` is correctly configured
 - Close Xcode completely and reopen `Runner.xcworkspace`
 - Clean build folder in Xcode (Product → Clean Build Folder)
+
+#### SDK Initialization Fails (iOS)
+
+- Verify your JWT token is valid and not expired
+- Check that the `domain` parameter matches your Zoom account domain
+- Ensure `MobileRTCResources.bundle` is correctly added to the app bundle
+- Verify the bundle path is correct in Xcode console logs
+
+### Android Issues
+
+#### Build Errors
+
+- **"Could not find mobilertc"**: Ensure you've set up the `mobilertc-repo` directory structure correctly as described in the [Android setup section](#android). Verify the repository paths in your `build.gradle` or `build.gradle.kts`.
+
+- **"Missing permissions"**: Ensure all required permissions are added to your `AndroidManifest.xml` as listed in the [Android permissions section](#required-permissions).
+
+- **Build errors**: Ensure your `minSdkVersion` is at least 28 in `android/app/build.gradle`.
+
+### Common Issues (Both Platforms)
+
+#### SDK Initialization Fails
+
+- Verify your JWT token is valid and not expired
+- Check that the `domain` parameter matches your Zoom account domain (defaults to `'zoom.us'`)
+- Ensure you're calling `initialize()` before attempting to join a meeting
+- Check console logs for detailed error messages
+
+#### Cannot Join Meeting
+
+- **"SDK not initialized"**: Make sure you call `initialize()` and wait for it to complete successfully before attempting to join a meeting
+- **"Meeting service not available"**: This usually means initialization hasn't completed yet. Wait for the initialization callback before joining
+- **Invalid meeting number**: Check that the meeting number is correct and the meeting exists
+- **Meeting password required**: If the meeting has a password, you must provide it in the `joinMeeting()` call
+
+#### Error Codes
+
+When joining a meeting fails, the result will include an error `code`. Common error codes:
+
+- `0`: Success
+- `1`: Invalid meeting number
+- `2`: Meeting password required
+- `3`: Meeting does not exist
+- `4`: Network error
+- `5`: SDK not initialized
+
+Refer to the [Zoom SDK documentation](https://marketplace.zoom.us/docs/sdk/native-sdks/ios/use-meeting-sdk/start-join-meeting/join-meeting-only) for a complete list of error codes.
 
 ## Usage
 
@@ -450,7 +530,15 @@ if (result?['status'] == 'success') {
 }
 ```
 
-**Important**: You need to generate a JWT token from your Zoom account credentials. See the [Zoom SDK documentation](https://marketplace.zoom.us/docs/sdk/native-sdks/android/getting-started) for details.
+**Important**: You need to generate a JWT token from your Zoom account credentials:
+
+1. Go to [Zoom App Marketplace](https://marketplace.zoom.us/)
+2. Sign in and create a new app or select an existing one
+3. Choose **Meeting SDK** as the app type
+4. In the app credentials section, generate a JWT token
+5. Copy the token and use it in your app
+
+> **Note**: JWT tokens expire. For production apps, consider implementing token refresh logic or using server-side token generation. See the [Zoom SDK documentation](https://marketplace.zoom.us/docs/sdk/native-sdks/android/getting-started) for more details.
 
 ### Join a Meeting
 
@@ -459,16 +547,21 @@ After initializing the SDK, you can join a meeting:
 ```dart
 final result = await zoomSdk.joinMeeting(
   meetingNumber: '1234567890',
-  password: 'optional_password', // Optional
+  password: 'optional_password', // Optional, only needed if meeting requires password
   displayName: 'John Doe',
 );
 
 if (result?['status'] == 'success') {
   print('Joining meeting...');
+  // The Zoom SDK will automatically present the native meeting UI
+  // Your Flutter app will remain in the background during the meeting
 } else {
   print('Failed to join: ${result?['code']}');
+  print('Error message: ${result?['message']}');
 }
 ```
+
+**Note**: When the join is successful, the Zoom SDK will automatically take over and display the native Zoom meeting interface. Your Flutter app will be in the background while the meeting is active. Users can exit the meeting to return to your Flutter app.
 
 ### Complete Example
 
@@ -569,6 +662,18 @@ Joins a Zoom meeting.
 
 **Returns:** `Future<Map<String, dynamic>?>` with join status and error code
 
+**Response format:**
+
+```dart
+{
+  'status': 'success' | 'failure',
+  'code': int,  // 0 for success, error code otherwise
+  'message': String?  // Optional error message
+}
+```
+
+**Note**: The join operation is asynchronous. The result may be returned immediately if there's an error, or via a callback when the meeting is successfully joined. On success, the Zoom SDK will automatically present the native meeting UI.
+
 ## Requirements
 
 - Flutter SDK: `>=3.3.0`
@@ -578,15 +683,22 @@ Joins a Zoom meeting.
 
 ## Important Notes
 
-1. **SDK Files**: The Zoom MobileRTC SDK files are not included in this package due to size and licensing restrictions. You must download and set up the SDK files manually as described in the Android setup section.
+1. **SDK Files**: The Zoom MobileRTC SDK files are not included in this package due to size and licensing restrictions. You must download and set up the SDK files manually as described in the [Android](#android) and [iOS](#ios) setup sections.
 
-2. **JWT Token**: You need a valid JWT token to initialize the SDK. Generate this from your Zoom developer account.
+2. **JWT Token**: You need a valid JWT token to initialize the SDK. Generate this from your Zoom developer account:
 
-3. **Meeting Requirements**: The meeting must already exist. This plugin does not create meetings, only joins existing ones.
+   - Go to [Zoom App Marketplace](https://marketplace.zoom.us/)
+   - Create or select your Meeting SDK app
+   - Generate a JWT token in the app credentials section
+   - **Important**: JWT tokens expire. You may need to regenerate them periodically or implement token refresh logic
 
-4. **iOS SDK Files**: The Zoom MobileRTC SDK files are not included in this package due to size and licensing restrictions. You must download and set up the SDK files manually as described in the iOS setup section.
+3. **Meeting Requirements**: The meeting must already exist. This plugin does not create meetings, only joins existing ones. You can create meetings using the Zoom API or through the Zoom web interface.
 
-## Running the example app
+4. **After Joining**: When you successfully join a meeting, the Zoom SDK will automatically present the native Zoom meeting UI. The Flutter app will remain in the background while the meeting is active. The meeting UI is fully managed by the Zoom SDK.
+
+## Running the Example App
+
+To run the example app:
 
 ```bash
 cd example
@@ -594,23 +706,11 @@ fvm flutter pub get
 fvm flutter run
 ```
 
-Make sure the `example/android/mobilertc*` folders still exist before running.
+**Prerequisites:**
 
-## Troubleshooting
-
-### Android Build Errors
-
-- **"Could not find mobilertc"**: Ensure you've set up the `mobilertc-repo` directory structure correctly as described in the Android setup section.
-
-- **"SDK not initialized"**: Make sure you call `initialize()` before attempting to join a meeting, and that your JWT token is valid.
-
-- **"Missing permissions"**: Ensure all required permissions are added to your `AndroidManifest.xml`.
-
-### Common Issues
-
-- **Initialization fails**: Verify your JWT token is valid and not expired
-- **Cannot join meeting**: Check that the meeting number is correct and the meeting exists
-- **Build errors**: Ensure your `minSdkVersion` is at least 28
+- Make sure the `example/android/mobilertc*` folders still exist before running
+- For iOS: Ensure the Zoom SDK files are set up in `example/ios/lib/` as described in the [iOS setup section](#ios)
+- You'll need a valid JWT token to test initialization and joining meetings
 
 ## Contributing
 
@@ -623,5 +723,7 @@ This plugin is provided as-is. Note that the Zoom MobileRTC SDK has its own lice
 ## Related Links
 
 - [Zoom Developer Portal](https://marketplace.zoom.us/)
+- [Zoom Meeting SDK Documentation](https://marketplace.zoom.us/docs/sdk/native-sdks/introduction)
 - [Zoom Android SDK Documentation](https://marketplace.zoom.us/docs/sdk/native-sdks/android/getting-started)
+- [Zoom iOS SDK Documentation](https://marketplace.zoom.us/docs/sdk/native-sdks/ios/getting-started)
 - [Flutter Documentation](https://flutter.dev/docs)
