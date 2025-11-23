@@ -202,22 +202,7 @@ From the extracted SDK package, you need these 4 files (usually found in the `li
 
    ⚠️ **Important**: Always open `.xcworkspace`, not `.xcodeproj`
 
-2. **Add Frameworks to "Link Binary With Libraries"**:
-
-   - In Xcode, select the **Runner** project in the left sidebar
-   - Select the **Runner** target (under "TARGETS")
-   - Click the **Build Phases** tab
-   - Expand **Link Binary With Libraries**
-   - Click the **+** button
-   - Click **Add Other...** → **Add Files...**
-   - Navigate to `ios/lib/` and select:
-     - `MobileRTC.xcframework`
-     - `MobileRTCScreenShare.xcframework`
-     - `zoomcml.xcframework`
-   - Click **Add**
-   - Ensure all three frameworks are listed and set to **Required** (not Optional)
-
-3. **Configure Framework Search Paths**:
+2. **Configure Framework Search Paths**:
 
    - Still in the **Runner** target's **Build Settings** tab
    - In the search bar, type: `Framework Search Paths`
@@ -227,7 +212,7 @@ From the extracted SDK package, you need these 4 files (usually found in the `li
    - Ensure it's set to **recursive** (the folder icon should show a blue folder, not yellow)
    - Click **Done**
 
-4. **Add MobileRTCResources.bundle to "Copy Bundle Resources"**:
+3. **Add MobileRTCResources.bundle to "Copy Bundle Resources"**:
 
    - Still in **Build Phases** tab
    - Expand **Copy Bundle Resources**
@@ -235,9 +220,10 @@ From the extracted SDK package, you need these 4 files (usually found in the `li
    - Click **Add Other...** → **Add Files...**
    - Navigate to `ios/lib/` and select `MobileRTCResources.bundle`
    - Click **Add**
+   - Copy Items if needed (Create folder reference)
    - Verify `MobileRTCResources.bundle` appears in the list
 
-5. **Add Frameworks to "Embed Frameworks"** (Required for runtime):
+4. **Add Frameworks to "Embed Frameworks"** (Required for runtime):
    - Still in **Build Phases** tab
    - Expand **Embed Frameworks**
    - Click the **+** button
@@ -249,7 +235,7 @@ From the extracted SDK package, you need these 4 files (usually found in the `li
    - Ensure all three are set to **Code Sign On Copy** (check the checkbox)
    - Verify all three frameworks appear in the list
 
-#### Step 5: Configure Podfile (Optional but Recommended)
+#### Step 5: Configure Podfile (Required)
 
 To ensure the plugin can find the frameworks during compilation, add a `post_install` hook to your `ios/Podfile`:
 
@@ -264,20 +250,59 @@ To ensure the plugin can find the frameworks during compilation, add a `post_ins
    ```ruby
    post_install do |installer|
      installer.pods_project.targets.each do |target|
+       flutter_additional_ios_build_settings(target)
+
+       # Configure framework search path and link frameworks for flutter_zoom_meeting_sdk plugin
        if target.name == 'flutter_zoom_meeting_sdk'
+         # Get the absolute path to ios/lib/ directory
+         ios_dir = File.dirname(installer.sandbox.root)
+         lib_path = File.join(ios_dir, 'lib')
+
+         # Add framework search paths
          target.build_configurations.each do |config|
-           # Add framework search path to find Zoom SDK frameworks in ios/lib/
-           # $(SRCROOT) in Pods context is the Pods directory
-           # ../ goes to project root, then ios/lib/ is where frameworks are
            config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
-           config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '"$(SRCROOT)/../ios/lib"'
+           config.build_settings['FRAMEWORK_SEARCH_PATHS'] << "\"#{lib_path}\""
+
+           # Add Swift import paths
+           config.build_settings['SWIFT_INCLUDE_PATHS'] ||= ['$(inherited)']
+           config.build_settings['SWIFT_INCLUDE_PATHS'] << "\"#{lib_path}\""
          end
+
+         # Add frameworks to the plugin target's "Link Binary With Libraries" phase
+         frameworks_group = installer.pods_project.frameworks_group
+         frameworks_build_phase = target.frameworks_build_phase
+
+         ['MobileRTC', 'MobileRTCScreenShare', 'zoomcml'].each do |framework_name|
+           framework_path = File.join(lib_path, "#{framework_name}.xcframework")
+
+           if File.exist?(framework_path)
+             # Create file reference
+             framework_ref = frameworks_group.new_file(framework_path)
+             framework_ref.name = "#{framework_name}.xcframework"
+
+             # Add to frameworks build phase
+             frameworks_build_phase.add_file_reference(framework_ref)
+
+             puts "Added #{framework_name}.xcframework to flutter_zoom_meeting_sdk target"
+           else
+             puts "WARNING: #{framework_path} not found!"
+           end
+         end
+
+         puts "Configured flutter_zoom_meeting_sdk:"
+         puts "  FRAMEWORK_SEARCH_PATHS: #{lib_path}"
+         puts "  SWIFT_INCLUDE_PATHS: #{lib_path}"
        end
      end
    end
    ```
 
-   This ensures the plugin can find the frameworks in `ios/lib/` during compilation.
+   This hook:
+
+   - Configures framework search paths so the plugin can find the Zoom SDK frameworks
+   - Adds Swift import paths for module resolution
+   - Automatically links the frameworks to the plugin target
+   - Provides helpful logging during `pod install`
 
 3. Run `pod install` in the `ios/` directory:
 
