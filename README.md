@@ -161,25 +161,27 @@ Before using this plugin on iOS, you need to set up the Zoom MobileRTC SDK local
 
 #### Step 1: Download the Zoom iOS SDK
 
-1. Go to the [Zoom Developer Portal](https://marketplace.zoom.us/docs/sdk/native-sdks/ios/getting-started)
-2. Download the **Zoom MobileRTC SDK for iOS** (usually a `.zip` file)
-3. Extract the downloaded ZIP file
+1. **Download the iOS SDK files**  
+   Download the prepared iOS SDK files from our secure SharePoint link:  
+   [https://algosoftcosa-my.sharepoint.com/:f:/g/personal/m_mehmood_algosoftco_com/EpZZI9of7QhOjrKJIzYLEF8B-E3OWnDNYAt1O6H3r0AOHw?e=zniJTc](https://algosoftcosa-my.sharepoint.com/:f:/g/personal/m_mehmood_algosoftco_com/EpZZI9of7QhOjrKJIzYLEF8B-E3OWnDNYAt1O6H3r0AOHw?e=zniJTc)
 
-Inside the extracted SDK package, you'll typically find:
+2. Extract the downloaded files if needed
+
+The iOS SDK package contains:
 
 - A `lib/` directory containing the frameworks and bundle
-- Example projects and documentation
+- The required SDK files ready to use
 
 #### Step 2: Locate the Required SDK Files
 
-From the extracted SDK package, you need these 4 files (usually found in the `lib/` directory):
+From the downloaded SharePoint package, you need these 4 files (found in the `lib/` directory):
 
 - `MobileRTC.xcframework` (main framework)
 - `MobileRTCScreenShare.xcframework` (screen sharing framework)
 - `zoomcml.xcframework` (communication framework)
 - `MobileRTCResources.bundle` (resources bundle)
 
-**Note**: The exact location may vary by SDK version. Look for a `lib/` or `frameworks/` folder in the extracted package.
+**Note**: These files should be in the `lib/` directory of the downloaded package.
 
 #### Step 3: Copy SDK Files to Your Flutter App
 
