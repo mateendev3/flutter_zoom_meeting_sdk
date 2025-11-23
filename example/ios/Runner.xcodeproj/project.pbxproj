@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
+		181CF6312ED308B000FAC18C /* zoomcml.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 181CF62E2ED308B000FAC18C /* zoomcml.xcframework */; };
+		181CF6322ED308B000FAC18C /* MobileRTCScreenShare.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 181CF62F2ED308B000FAC18C /* MobileRTCScreenShare.xcframework */; };
+		181CF6332ED308B000FAC18C /* MobileRTC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 181CF6302ED308B000FAC18C /* MobileRTC.xcframework */; };
+		181CF6352ED3098600FAC18C /* MobileRTCResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 181CF6342ED3098600FAC18C /* MobileRTCResources.bundle */; };
 		294E1C77C23793D7EFC54BAE /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09B12CBE51362B3605D1B666 /* Pods_RunnerTests.framework */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
@@ -15,6 +19,9 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		181CF6362ED3098600FAC18C /* MobileRTC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 181CF6302ED308B000FAC18C /* MobileRTC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		181CF6372ED3098600FAC18C /* MobileRTCScreenShare.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 181CF62F2ED308B000FAC18C /* MobileRTCScreenShare.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		181CF6382ED3098600FAC18C /* zoomcml.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 181CF62E2ED308B000FAC18C /* zoomcml.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FAA2531689745000349269BB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38E2D06424DB51390C971E3E /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
@@ -35,6 +42,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				181CF6362ED3098600FAC18C /* MobileRTC.xcframework in Embed Frameworks */,
+				181CF6372ED3098600FAC18C /* MobileRTCScreenShare.xcframework in Embed Frameworks */,
+				181CF6382ED3098600FAC18C /* zoomcml.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -46,6 +56,10 @@
 		0B3E2CC3299A729620677D5E /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		181CF62E2ED308B000FAC18C /* zoomcml.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:BJ4HAAB9B3:Zoom Communications, Inc."; lastKnownFileType = wrapper.xcframework; name = zoomcml.xcframework; path = lib/zoomcml.xcframework; sourceTree = "<group>"; };
+		181CF62F2ED308B000FAC18C /* MobileRTCScreenShare.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:BJ4HAAB9B3:Zoom Communications, Inc."; lastKnownFileType = wrapper.xcframework; name = MobileRTCScreenShare.xcframework; path = lib/MobileRTCScreenShare.xcframework; sourceTree = "<group>"; };
+		181CF6302ED308B000FAC18C /* MobileRTC.xcframework */ = {isa = PBXFileReference; expectedSignature = "AppleDeveloperProgram:BJ4HAAB9B3:Zoom Communications, Inc."; lastKnownFileType = wrapper.xcframework; name = MobileRTC.xcframework; path = lib/MobileRTC.xcframework; sourceTree = "<group>"; };
+		181CF6342ED3098600FAC18C /* MobileRTCResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = MobileRTCResources.bundle; path = lib/MobileRTCResources.bundle; sourceTree = "<group>"; };
 		25D81916C5255441659A1AC4 /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +94,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				181CF6312ED308B000FAC18C /* zoomcml.xcframework in Frameworks */,
+				181CF6322ED308B000FAC18C /* MobileRTCScreenShare.xcframework in Frameworks */,
+				181CF6332ED308B000FAC18C /* MobileRTC.xcframework in Frameworks */,
 				FAA2531689745000349269BB /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -109,6 +126,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				181CF6342ED3098600FAC18C /* MobileRTCResources.bundle */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				97C146EF1CF9000F007C117D /* Products */,
@@ -152,13 +170,15 @@
 				4B5AFF00911CA2918F121C9F /* Pods-RunnerTests.release.xcconfig */,
 				403ADA9869B7BF84C3A30302 /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
 		D81A2A873B456BE98FEE3FAC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				181CF6302ED308B000FAC18C /* MobileRTC.xcframework */,
+				181CF62F2ED308B000FAC18C /* MobileRTCScreenShare.xcframework */,
+				181CF62E2ED308B000FAC18C /* zoomcml.xcframework */,
 				38E2D06424DB51390C971E3E /* Pods_Runner.framework */,
 				09B12CBE51362B3605D1B666 /* Pods_RunnerTests.framework */,
 			);
@@ -260,6 +280,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				181CF6352ED3098600FAC18C /* MobileRTCResources.bundle in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
@@ -473,15 +494,29 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = N5YBS577G7;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_zoom_meeting_sdk\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/integration_test\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/flutter_zoom_meeting_sdk\"",
+					"$(SRCROOT)/lib/**",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.mateenmehmood.flutterZoomMeetingSdkExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Profile;
@@ -656,16 +691,30 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = N5YBS577G7;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_zoom_meeting_sdk\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/integration_test\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/flutter_zoom_meeting_sdk\"",
+					"$(SRCROOT)/lib/**",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.mateenmehmood.flutterZoomMeetingSdkExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -679,15 +728,29 @@
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				DEVELOPMENT_TEAM = N5YBS577G7;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/flutter_zoom_meeting_sdk\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/integration_test\"",
+					"\"${PODS_XCFRAMEWORKS_BUILD_DIR}/flutter_zoom_meeting_sdk\"",
+					"$(SRCROOT)/lib/**",
+				);
 				INFOPLIST_FILE = Runner/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.mateenmehmood.flutterZoomMeetingSdkExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

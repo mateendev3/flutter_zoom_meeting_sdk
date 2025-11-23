@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-# platform :ios, '13.0'
+platform :ios, '13.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -39,5 +39,47 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
+    
+    # Configure framework search path and link frameworks for flutter_zoom_meeting_sdk plugin
+    if target.name == 'flutter_zoom_meeting_sdk'
+      # Get the absolute path to ios/lib/ directory
+      ios_dir = File.dirname(installer.sandbox.root)
+      lib_path = File.join(ios_dir, 'lib')
+      
+      # Add framework search paths
+      target.build_configurations.each do |config|
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] << "\"#{lib_path}\""
+        
+        # Add Swift import paths
+        config.build_settings['SWIFT_INCLUDE_PATHS'] ||= ['$(inherited)']
+        config.build_settings['SWIFT_INCLUDE_PATHS'] << "\"#{lib_path}\""
+      end
+      
+      # Add frameworks to the plugin target's "Link Binary With Libraries" phase
+      frameworks_group = installer.pods_project.frameworks_group
+      frameworks_build_phase = target.frameworks_build_phase
+      
+      ['MobileRTC', 'MobileRTCScreenShare', 'zoomcml'].each do |framework_name|
+        framework_path = File.join(lib_path, "#{framework_name}.xcframework")
+        
+        if File.exist?(framework_path)
+          # Create file reference
+          framework_ref = frameworks_group.new_file(framework_path)
+          framework_ref.name = "#{framework_name}.xcframework"
+          
+          # Add to frameworks build phase
+          frameworks_build_phase.add_file_reference(framework_ref)
+          
+          puts "Added #{framework_name}.xcframework to flutter_zoom_meeting_sdk target"
+        else
+          puts "WARNING: #{framework_path} not found!"
+        end
+      end
+      
+      puts "Configured flutter_zoom_meeting_sdk:"
+      puts "  FRAMEWORK_SEARCH_PATHS: #{lib_path}"
+      puts "  SWIFT_INCLUDE_PATHS: #{lib_path}"
+    end
   end
 end

@@ -20,9 +20,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_zoom_meeting_sdk: 1ee8fad5901e4dbc58e9f60973e2d211e7fcfb7e
+  flutter_zoom_meeting_sdk: 72cf189d4bbbe136ba15cc655faf55c12faf1d1f
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
 
-PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
+PODFILE CHECKSUM: 13d40cc29e51196e85f37b65eef5699661427e29
 
 COCOAPODS: 1.16.2

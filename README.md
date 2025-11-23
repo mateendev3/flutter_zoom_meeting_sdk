@@ -9,7 +9,7 @@ A Flutter plugin that provides a bridge to the Zoom MobileRTC SDK, enabling Flut
 - ✅ Support for meeting passwords
 - ✅ Customizable display names
 - ✅ Android fully supported
-- ⚠️ iOS support (partial - platform version only)
+- ✅ iOS fully supported
 
 ## Installation
 
@@ -127,7 +127,221 @@ Add the following permissions to your `android/app/src/main/AndroidManifest.xml`
 
 ### iOS
 
-⚠️ **Note**: iOS implementation is currently partial. Only platform version detection is available. Full meeting functionality for iOS is coming soon.
+#### Prerequisites
+
+Before using this plugin on iOS, you need to set up the Zoom MobileRTC SDK locally:
+
+#### Step 1: Download the Zoom iOS SDK
+
+1. Go to the [Zoom Developer Portal](https://marketplace.zoom.us/docs/sdk/native-sdks/ios/getting-started)
+2. Download the **Zoom MobileRTC SDK for iOS** (usually a `.zip` file)
+3. Extract the downloaded ZIP file
+
+Inside the extracted SDK package, you'll typically find:
+
+- A `lib/` directory containing the frameworks and bundle
+- Example projects and documentation
+
+#### Step 2: Locate the Required SDK Files
+
+From the extracted SDK package, you need these 4 files (usually found in the `lib/` directory):
+
+- `MobileRTC.xcframework` (main framework)
+- `MobileRTCScreenShare.xcframework` (screen sharing framework)
+- `zoomcml.xcframework` (communication framework)
+- `MobileRTCResources.bundle` (resources bundle)
+
+**Note**: The exact location may vary by SDK version. Look for a `lib/` or `frameworks/` folder in the extracted package.
+
+#### Step 3: Copy SDK Files to Your Flutter App
+
+1. Navigate to your Flutter app's `ios/` directory:
+
+   ```bash
+   cd <your-flutter-app>/ios
+   ```
+
+2. Create a `lib/` directory inside `ios/` (if it doesn't exist):
+
+   ```bash
+   mkdir -p lib
+   ```
+
+3. Copy the 4 SDK files into `ios/lib/`:
+
+   ```bash
+   # Copy from wherever you extracted the SDK
+   cp /path/to/extracted-sdk/lib/MobileRTC.xcframework ios/lib/
+   cp /path/to/extracted-sdk/lib/MobileRTCScreenShare.xcframework ios/lib/
+   cp /path/to/extracted-sdk/lib/zoomcml.xcframework ios/lib/
+   cp /path/to/extracted-sdk/lib/MobileRTCResources.bundle ios/lib/
+   ```
+
+   Your directory structure should now look like this:
+
+   ```
+   <your-flutter-app>/
+     └── ios/
+         ├── lib/
+         │   ├── MobileRTC.xcframework/
+         │   ├── MobileRTCScreenShare.xcframework/
+         │   ├── zoomcml.xcframework/
+         │   └── MobileRTCResources.bundle/
+         ├── Runner/
+         ├── Podfile
+         └── ...
+   ```
+
+#### Step 4: Configure Xcode Project
+
+1. **Open your iOS project in Xcode**:
+
+   ```bash
+   open ios/Runner.xcworkspace
+   ```
+
+   ⚠️ **Important**: Always open `.xcworkspace`, not `.xcodeproj`
+
+2. **Add Frameworks to "Link Binary With Libraries"**:
+
+   - In Xcode, select the **Runner** project in the left sidebar
+   - Select the **Runner** target (under "TARGETS")
+   - Click the **Build Phases** tab
+   - Expand **Link Binary With Libraries**
+   - Click the **+** button
+   - Click **Add Other...** → **Add Files...**
+   - Navigate to `ios/lib/` and select:
+     - `MobileRTC.xcframework`
+     - `MobileRTCScreenShare.xcframework`
+     - `zoomcml.xcframework`
+   - Click **Add**
+   - Ensure all three frameworks are listed and set to **Required** (not Optional)
+
+3. **Configure Framework Search Paths**:
+
+   - Still in the **Runner** target's **Build Settings** tab
+   - In the search bar, type: `Framework Search Paths`
+   - Double-click the **Framework Search Paths** row (under "Search Paths")
+   - Click the **+** button
+   - Add: `$(SRCROOT)/lib`
+   - Ensure it's set to **recursive** (the folder icon should show a blue folder, not yellow)
+   - Click **Done**
+
+4. **Add MobileRTCResources.bundle to "Copy Bundle Resources"**:
+
+   - Still in **Build Phases** tab
+   - Expand **Copy Bundle Resources**
+   - Click the **+** button
+   - Click **Add Other...** → **Add Files...**
+   - Navigate to `ios/lib/` and select `MobileRTCResources.bundle`
+   - Click **Add**
+   - Verify `MobileRTCResources.bundle` appears in the list
+
+5. **Add Frameworks to "Embed Frameworks"** (Required for runtime):
+   - Still in **Build Phases** tab
+   - Expand **Embed Frameworks**
+   - Click the **+** button
+   - Select all three frameworks:
+     - `MobileRTC.xcframework`
+     - `MobileRTCScreenShare.xcframework`
+     - `zoomcml.xcframework`
+   - Click **Add**
+   - Ensure all three are set to **Code Sign On Copy** (check the checkbox)
+   - Verify all three frameworks appear in the list
+
+#### Step 5: Configure Podfile (Optional but Recommended)
+
+To ensure the plugin can find the frameworks during compilation, add a `post_install` hook to your `ios/Podfile`:
+
+1. Open `ios/Podfile` and ensure the minimum iOS version is set:
+
+   ```ruby
+   platform :ios, '13.0'
+   ```
+
+2. Add a `post_install` hook at the end of the Podfile (before the final `end`):
+
+   ```ruby
+   post_install do |installer|
+     installer.pods_project.targets.each do |target|
+       if target.name == 'flutter_zoom_meeting_sdk'
+         target.build_configurations.each do |config|
+           # Add framework search path to find Zoom SDK frameworks in ios/lib/
+           # $(SRCROOT) in Pods context is the Pods directory
+           # ../ goes to project root, then ios/lib/ is where frameworks are
+           config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= ['$(inherited)']
+           config.build_settings['FRAMEWORK_SEARCH_PATHS'] << '"$(SRCROOT)/../ios/lib"'
+         end
+       end
+     end
+   end
+   ```
+
+   This ensures the plugin can find the frameworks in `ios/lib/` during compilation.
+
+3. Run `pod install` in the `ios/` directory:
+
+   ```bash
+   cd ios
+   pod install
+   cd ..
+   ```
+
+4. **Important**: After running `pod install`, close Xcode completely and reopen `ios/Runner.xcworkspace` to ensure the changes take effect.
+
+#### Required Permissions
+
+Add the following entries to your `ios/Runner/Info.plist`:
+
+```xml
+<key>NSCameraUsageDescription</key>
+<string>This app needs access to your camera to join Zoom meetings.</string>
+
+<key>NSMicrophoneUsageDescription</key>
+<string>This app needs access to your microphone to join Zoom meetings.</string>
+
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app needs access to your photo library to share content in Zoom meetings.</string>
+```
+
+#### App Lifecycle Integration
+
+The Zoom SDK requires app lifecycle notifications. Update your `ios/Runner/AppDelegate.swift`:
+
+```swift
+import UIKit
+import Flutter
+import MobileRTC
+
+@UIApplicationMain
+@objc class AppDelegate: FlutterAppDelegate {
+  override func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
+    GeneratedPluginRegistrant.register(with: self)
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  override func applicationWillResignActive(_ application: UIApplication) {
+    MobileRTC.shared().appWillResignActive()
+  }
+
+  override func applicationDidBecomeActive(_ application: UIApplication) {
+    MobileRTC.shared().appDidBecomeActive()
+  }
+
+  override func applicationDidEnterBackground(_ application: UIApplication) {
+    MobileRTC.shared().appDidEnterBackgroud()
+  }
+
+  override func applicationWillTerminate(_ application: UIApplication) {
+    MobileRTC.shared().appWillTerminate()
+  }
+}
+```
+
+> **Note**: The example app in this repo already contains these configurations under `example/ios/`.
 
 ## Usage
 
@@ -284,7 +498,7 @@ Joins a Zoom meeting.
 - Flutter SDK: `>=3.3.0`
 - Dart SDK: `^3.10.0`
 - Android: Minimum SDK 28
-- iOS: iOS 12.0+ (partial support)
+- iOS: iOS 13.0+
 
 ## Important Notes
 
@@ -294,7 +508,7 @@ Joins a Zoom meeting.
 
 3. **Meeting Requirements**: The meeting must already exist. This plugin does not create meetings, only joins existing ones.
 
-4. **iOS Support**: Full iOS support is in development. Currently, only platform version detection is available.
+4. **iOS SDK Files**: The Zoom MobileRTC SDK files are not included in this package due to size and licensing restrictions. You must download and set up the SDK files manually as described in the iOS setup section.
 
 ## Running the example app
 
