@@ -38,3 +38,5 @@ migrate_working_dir/
 # Zoom MobileRTC SDK (too large for git, must be set up locally)
 /android/mobilertc/
 /android/mobilertc-repo/
+
+/ios/zoom-sdk-bundle/
