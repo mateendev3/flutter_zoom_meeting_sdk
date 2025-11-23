@@ -331,14 +331,16 @@ Add the following entries to your `ios/Runner/Info.plist`:
 
 #### App Lifecycle Integration
 
-The Zoom SDK requires app lifecycle notifications. Update your `ios/Runner/AppDelegate.swift`:
+⚠️ **REQUIRED**: The Zoom SDK requires app lifecycle notifications to function properly. Without these methods, your app will crash when attempting to join a meeting.
+
+Update your `ios/Runner/AppDelegate.swift`:
 
 ```swift
 import UIKit
 import Flutter
 import MobileRTC
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate {
   override func application(
     _ application: UIApplication,
@@ -350,23 +352,72 @@ import MobileRTC
 
   override func applicationWillResignActive(_ application: UIApplication) {
     MobileRTC.shared().appWillResignActive()
+    super.applicationWillResignActive(application)
   }
 
   override func applicationDidBecomeActive(_ application: UIApplication) {
     MobileRTC.shared().appDidBecomeActive()
+    super.applicationDidBecomeActive(application)
   }
 
   override func applicationDidEnterBackground(_ application: UIApplication) {
-    MobileRTC.shared().appDidEnterBackgroud()
+    MobileRTC.shared().appDidEnterBackground()
+    super.applicationDidEnterBackground(application)
   }
 
   override func applicationWillTerminate(_ application: UIApplication) {
     MobileRTC.shared().appWillTerminate()
+    super.applicationWillTerminate(application)
   }
 }
 ```
 
 > **Note**: The example app in this repo already contains these configurations under `example/ios/`.
+
+> ⚠️ **CRITICAL**: Without these AppDelegate lifecycle methods, the app will crash when attempting to join a meeting. Make sure all four lifecycle methods are implemented and call the corresponding `MobileRTC.shared()` methods.
+
+## Troubleshooting
+
+### App Crashes When Joining Meeting
+
+If your app crashes with an `abort` error when trying to join a meeting, check the following:
+
+1. **AppDelegate Lifecycle Methods** (Most Common Issue):
+   - Ensure your `AppDelegate.swift` implements all four lifecycle methods shown above
+   - Verify each method calls the corresponding `MobileRTC.shared()` method
+   - Make sure you're calling `super` methods as well
+
+2. **Frameworks Not Embedded**:
+   - Verify all three frameworks are in the "Embed Frameworks" build phase
+   - Check that "Code Sign On Copy" is enabled for all frameworks
+   - Ensure frameworks are present in `ios/lib/` directory
+
+3. **Resource Bundle Missing**:
+   - Verify `MobileRTCResources.bundle` is in "Copy Bundle Resources" build phase
+   - Check that the bundle exists in `ios/lib/` directory
+
+4. **Permissions Missing**:
+   - Ensure all three permission keys are in `Info.plist`:
+     - `NSCameraUsageDescription`
+     - `NSMicrophoneUsageDescription`
+     - `NSPhotoLibraryUsageDescription`
+
+5. **Check Xcode Console Logs**:
+   - Look for `[ZoomSDK]` prefixed log messages
+   - These will help identify where the initialization or join process is failing
+
+### SDK Initialization Fails
+
+- Verify your JWT token is valid and not expired
+- Check that the `domain` parameter matches your Zoom account domain
+- Ensure `MobileRTCResources.bundle` is correctly added to the app bundle
+
+### Build Errors: "Unable to find module dependency: 'MobileRTC'"
+
+- Run `pod install` in the `ios/` directory
+- Verify the `post_install` hook in `Podfile` is correctly configured
+- Close Xcode completely and reopen `Runner.xcworkspace`
+- Clean build folder in Xcode (Product → Clean Build Folder)
 
 ## Usage
 
