@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to your camera to participate in Zoom meetings.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs access to your microphone to participate in Zoom meetings.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library to share images in Zoom meetings.</string>
 </dict>
 </plist>

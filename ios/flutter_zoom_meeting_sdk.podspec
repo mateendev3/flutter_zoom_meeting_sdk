@@ -4,10 +4,11 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_zoom_meeting_sdk'
-  s.version          = '0.0.1'
-  s.summary          = 'Flutter SDK for zoom meeting'
+  s.version          = '1.0.0'
+  s.summary          = 'Flutter plugin for Zoom MobileRTC SDK'
   s.description      = <<-DESC
-Flutter SDK for zoom meeting
+A Flutter plugin that provides a bridge to the Zoom MobileRTC SDK, enabling Flutter
+applications to initialize the Zoom SDK and join meetings on iOS and Android platforms.
                        DESC
   s.homepage         = 'http://example.com'
   s.license          = { :file => '../LICENSE' }
@@ -17,9 +18,21 @@ Flutter SDK for zoom meeting
   s.dependency 'Flutter'
   s.platform = :ios, '13.0'
 
-  # Flutter.framework does not contain a i386 slice.
-  s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
+
+  # System frameworks required by Zoom SDK
+  # Users must add the Zoom SDK frameworks and bundle to their app manually
+  # See README.md for setup instructions
+  s.frameworks = 'VideoToolbox', 'ReplayKit', 'CoreMedia', 'AVFoundation', 'AudioToolbox', 'CoreAudio', 'CoreVideo'
+  
+  # Framework linking configuration
+  # Users must add the Zoom SDK frameworks to their Xcode project at ios/lib/
+  # Framework search paths are configured via Podfile post_install hook (see README.md)
+  s.pod_target_xcconfig = {
+    'DEFINES_MODULE' => 'YES',
+    'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
+    'OTHER_LDFLAGS' => '$(inherited) -framework MobileRTC -framework MobileRTCScreenShare -framework zoomcml'
+  }
 
   # If your plugin requires a privacy manifest, for example if it uses any
   # required reason APIs, update the PrivacyInfo.xcprivacy file to describe your
