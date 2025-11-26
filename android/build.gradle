@@ -73,6 +73,10 @@ android {
             pickFirsts += ["lib/**/libc++_shared.so"]
         }
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 // Project dependencies
@@ -133,6 +137,7 @@ dependencies {
     implementation(libraries.composeLifecycleViewmodel)
     implementation(libraries.profileinstaller)
     implementation(libraries.coilGif)
+    implementation(libraries.viewBindingX)
 
     // Test dependencies
     testImplementation("org.jetbrains.kotlin:kotlin-test")

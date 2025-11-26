@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_zoom_meeting_sdk'
-  s.version          = '1.0.1'
+  s.version          = '1.0.2'
   s.summary          = 'Flutter plugin for Zoom MobileRTC SDK'
   s.description      = <<-DESC
 A Flutter plugin that provides a bridge to the Zoom MobileRTC SDK, enabling Flutter

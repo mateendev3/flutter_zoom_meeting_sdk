@@ -34,7 +34,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_zoom_meeting_sdk: ^1.0.1
+  flutter_zoom_meeting_sdk: ^1.0.2
 ```
 
 Then run:
